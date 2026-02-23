@@ -1,0 +1,81 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/auth-provider";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  BookOpen,
+  LayoutDashboard,
+  ArrowLeftRight,
+  Users,
+  Sparkles,
+  Search,
+  MessageSquare,
+  BarChart3,
+  Settings,
+  Library,
+  Menu,
+} from "lucide-react";
+
+const getNavItems = (role: string) => {
+  const items = [
+    { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["admin", "librarian", "member"] },
+    { title: "Books", href: "/books", icon: BookOpen, roles: ["admin", "librarian", "member"] },
+    { title: "Check In/Out", href: "/checkout", icon: ArrowLeftRight, roles: ["admin", "librarian"] },
+    { title: "Members", href: "/members", icon: Users, roles: ["admin"] },
+    { title: "AI Recommendations", href: "/ai/recommendations", icon: Sparkles, roles: ["admin", "librarian", "member"] },
+    { title: "AI Search", href: "/ai/search", icon: Search, roles: ["admin", "librarian", "member"] },
+    { title: "AI Assistant", href: "/ai/assistant", icon: MessageSquare, roles: ["admin", "librarian", "member"] },
+    { title: "Analytics", href: "/analytics", icon: BarChart3, roles: ["admin"] },
+    { title: "Settings", href: "/settings", icon: Settings, roles: ["admin", "librarian", "member"] },
+  ];
+  return items.filter((item) => item.roles.includes(role));
+};
+
+export function MobileNav() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const { profile } = useAuth();
+  const navItems = getNavItems(profile?.role || "member");
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0">
+        <div className="flex h-16 items-center gap-2 border-b px-6">
+          <Library className="h-6 w-6 text-primary" />
+          <span className="text-lg font-semibold">Mini Library</span>
+        </div>
+        <nav className="space-y-1 p-4">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+            const Icon = item.icon;
+            return (
+              <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>
+                <div
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.title}
+                </div>
+              </Link>
+            );
+          })}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+}
