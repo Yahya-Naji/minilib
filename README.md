@@ -4,10 +4,11 @@ A full-stack library management application built with Next.js, Supabase, and AI
 
 # Test: 
 web: https://minilib-hamsalg6s-yahya-najis-projects.vercel.app/
-1- admin: yahya.naji@aspiresoftware.com
-2- user: yayanaji.yn@gmail.com
-3- pass: for both n@ji123 
-note: feel free to create user
+
+- **admin:**:yahya.naji@aspiresoftware.com
+- **user**:yayanaji.yn@gmail.com
+- **pass**:  for both n@ji123 
+- **note**: feel free to add ur own user
 
 ## Tech Stack
 
